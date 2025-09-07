@@ -29,9 +29,8 @@ struct ContentView: View {
                             }
                         })
                 }else{
-                    VStack{
-                        Text("All good")
-                    }
+                    MainTabView()
+                        .environmentObject(db)
                 }
             }
         }

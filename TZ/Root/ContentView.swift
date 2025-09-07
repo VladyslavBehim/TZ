@@ -8,14 +8,33 @@
 import SwiftUI
 
 struct ContentView: View {
+    @StateObject var auth = AuthManager.shared
+    @StateObject var db = DatabaseManager.shared
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        Group{
+            if auth.user == nil{
+                AuthView()
+            }else{
+                if db.player == nil{
+                    ProgressView("Loading player...")
+                        .onAppear(perform: {
+                            db.createUserIfNeeded(username: "Test") { res in
+                                switch res {
+                                case .success(_):
+                                    print("OK")
+                                case .failure(let failure):
+                                    print(failure)
+                                }
+                            }
+                        })
+                }else{
+                    VStack{
+                        Text("All good")
+                    }
+                }
+            }
         }
-        .padding()
     }
 }
 

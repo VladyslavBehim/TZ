@@ -12,6 +12,7 @@ import FirebaseAuth
 
 final class DatabaseManager : ObservableObject {
     @Published var player: Player?
+    var nameOfUser: String = ""
     static let shared = DatabaseManager()
     private let db = Firestore.firestore()
     private var uid: String? { Auth.auth().currentUser?.uid }
@@ -54,7 +55,10 @@ final class DatabaseManager : ObservableObject {
                do {
                    let jsonData = try JSONSerialization.data(withJSONObject: data)
                    let p = try JSONDecoder().decode(Player.self, from: jsonData)
-                   DispatchQueue.main.async { self.player = p; completion(.success(())) }
+                   DispatchQueue.main.async {
+                       self.player = p;
+                       completion(.success(()))
+                   }
                } catch {
                    completion(.failure(error))
                }
@@ -75,6 +79,7 @@ final class DatabaseManager : ObservableObject {
        func deletePlayerDB(completion: @escaping (Error?)->Void) {
            guard let uid = uid else { completion(NSError(domain:"DB", code:-1)); return }
            db.collection("users").document(uid).delete(completion: { error in completion(error) })
+           
        }
        
 }

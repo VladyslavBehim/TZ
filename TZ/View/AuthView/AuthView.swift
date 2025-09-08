@@ -9,8 +9,10 @@ import SwiftUI
 
 struct AuthView: View {
     @State private var loading = false
-    @State private var userName = "Vladyslav"
+    @State private var userName = ""
     @State private var showNextView : Bool = false
+    @EnvironmentObject var db: DatabaseManager
+
     var body: some View {
         VStack(spacing: 20) {
             Text("Welcome to Roulette")
@@ -42,6 +44,7 @@ struct AuthView: View {
                     AuthManager.shared.signInAnonymously { result in
                         DispatchQueue.main.async { loading = false }
                     }
+                    db.nameOfUser = userName
                 } label: {
                     Text("Play as \(self.userName)")
                     .padding()

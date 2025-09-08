@@ -15,11 +15,15 @@ struct ContentView: View {
         Group{
             if auth.user == nil{
                 AuthView()
+                    .environmentObject(db)
+                    .onAppear {	
+                        db.player = nil
+                    }
             }else{
                 if db.player == nil{
                     ProgressView("Loading player...")
                         .onAppear(perform: {
-                            db.createUserIfNeeded(username: "Test") { res in
+                            db.createUserIfNeeded(username: "\(db.nameOfUser)") { res in
                                 switch res {
                                 case .success(_):
                                     print("OK")
